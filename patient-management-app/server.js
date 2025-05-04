@@ -151,5 +151,5 @@ app.post('/api/analyze', async (req, res) => {
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${PORT}`);
-  console.log(`Access the application at https://work-2-ayllfnqueanicmye.prod-runtime.all-hands.dev`);
+  console.log(`Access the application at https://work-2-hgnznzdhogwuyjoe.prod-runtime.all-hands.dev`);
 });

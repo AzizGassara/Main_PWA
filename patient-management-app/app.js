@@ -51,6 +51,10 @@ function addEventListeners() {
     document.getElementById('cancel-patient-btn').addEventListener('click', hidePatientForm);
     document.getElementById('patient-form').addEventListener('submit', savePatient);
     
+    // Patient search
+    document.getElementById('patient-search').addEventListener('input', handlePatientSearch);
+    document.getElementById('clear-search').addEventListener('click', clearPatientSearch);
+    
     // Consultation section
     document.getElementById('add-consultation-btn').addEventListener('click', showAddConsultationForm);
     document.getElementById('back-to-patients-btn').addEventListener('click', showPatientSection);
@@ -125,7 +129,7 @@ function hideLoading(container) {
 }
 
 // Patient Management Functions
-function loadPatients() {
+function loadPatients(searchQuery = '') {
     const patients = getPatients();
     const patientsList = document.getElementById('patients-list');
     patientsList.innerHTML = '';
@@ -135,10 +139,52 @@ function loadPatients() {
         return;
     }
     
-    patients.forEach(patient => {
+    // Filter patients based on search query if provided
+    const filteredPatients = searchQuery 
+        ? patients.filter(patient => 
+            patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            patient.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (patient.phone && patient.phone.includes(searchQuery)) ||
+            (patient.history && patient.history.toLowerCase().includes(searchQuery.toLowerCase())))
+        : patients;
+    
+    if (filteredPatients.length === 0) {
+        patientsList.innerHTML = '<p>Aucun résultat trouvé pour votre recherche.</p>';
+        return;
+    }
+    
+    filteredPatients.forEach(patient => {
         const patientCard = createPatientCard(patient);
         patientsList.appendChild(patientCard);
     });
+}
+
+// Handle patient search
+function handlePatientSearch(event) {
+    const searchQuery = event.target.value.trim();
+    const clearButton = document.getElementById('clear-search');
+    
+    // Show/hide clear button based on search input
+    if (searchQuery.length > 0) {
+        clearButton.classList.add('visible');
+    } else {
+        clearButton.classList.remove('visible');
+    }
+    
+    // Load patients with search filter
+    loadPatients(searchQuery);
+}
+
+// Clear patient search
+function clearPatientSearch() {
+    const searchInput = document.getElementById('patient-search');
+    const clearButton = document.getElementById('clear-search');
+    
+    searchInput.value = '';
+    clearButton.classList.remove('visible');
+    
+    // Reload all patients
+    loadPatients();
 }
 
 function createPatientCard(patient) {
