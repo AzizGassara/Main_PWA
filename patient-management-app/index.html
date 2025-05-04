@@ -227,6 +227,11 @@
                                     <textarea id="tests" rows="3" placeholder="Tests médicaux recommandés"></textarea>
                                 </div>
                                 
+                                <div class="form-group">
+                                    <label for="additional-info">Informations Supplémentaires</label>
+                                    <textarea id="additional-info" rows="3" placeholder="Autres informations importantes"></textarea>
+                                </div>
+                                
                                 <div class="form-actions">
                                     <button type="button" id="back-to-step-2" class="btn secondary">
                                         <span class="material-symbols-rounded">arrow_back</span>
@@ -286,6 +291,22 @@
                     <input type="password" id="gemini-api-key" placeholder="Entrez votre clé API Gemini">
                     <small>Nécessaire pour la transcription audio et l'analyse des consultations</small>
                 </div>
+                
+                <div class="form-group">
+                    <label>Gestion des Données</label>
+                    <div class="button-group">
+                        <button type="button" id="export-data-btn" class="btn secondary">
+                            <span class="material-symbols-rounded">download</span>
+                            Exporter les Données
+                        </button>
+                        <button type="button" id="import-data-btn" class="btn secondary">
+                            <span class="material-symbols-rounded">upload</span>
+                            Importer des Données
+                        </button>
+                    </div>
+                    <small>Exportez vos données pour les sauvegarder ou les importer sur un autre appareil</small>
+                </div>
+                
                 <div class="form-actions">
                     <button type="button" id="cancel-settings-btn" class="btn secondary">Annuler</button>
                     <button type="submit" class="btn primary">
@@ -293,6 +314,7 @@
                         Enregistrer
                     </button>
                 </div>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;">
             </form>
         </div>
     </div>

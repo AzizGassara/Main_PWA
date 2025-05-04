@@ -95,6 +95,9 @@ function addEventListeners() {
     document.querySelector('.close-settings-modal').addEventListener('click', hideSettingsModal);
     document.getElementById('cancel-settings-btn').addEventListener('click', hideSettingsModal);
     document.getElementById('settings-form').addEventListener('submit', saveSettingsForm);
+    document.getElementById('export-data-btn').addEventListener('click', exportData);
+    document.getElementById('import-data-btn').addEventListener('click', importData);
+    document.getElementById('import-file-input').addEventListener('change', handleFileImport);
     
     // Modal
     document.querySelector('.close-modal').addEventListener('click', hideModal);
@@ -577,6 +580,7 @@ function saveConsultation(event) {
     const diagnosis = document.getElementById('diagnosis').value.trim();
     const medications = document.getElementById('medications').value.trim();
     const tests = document.getElementById('tests').value.trim();
+    const additionalInfo = document.getElementById('additional-info').value.trim();
     
     if (!date) {
         showModal('Erreur', 'Veuillez sélectionner une date.');
@@ -603,7 +607,8 @@ function saveConsultation(event) {
                 symptoms,
                 diagnosis,
                 medications,
-                tests
+                tests,
+                additionalInfo
             };
         }
     } else {
@@ -615,7 +620,8 @@ function saveConsultation(event) {
             symptoms,
             diagnosis,
             medications,
-            tests
+            tests,
+            additionalInfo
         };
         
         if (!patients[patientIndex].consultations) {
@@ -719,6 +725,13 @@ function viewConsultationDetails(consultationId) {
             
             <div class="consultation-details-card">
                 <div class="details-section">
+                    <h4><span class="material-symbols-rounded">info</span> Informations Supplémentaires</h4>
+                    <p>${consultation.additionalInfo || 'Aucune information supplémentaire'}</p>
+                </div>
+            </div>
+            
+            <div class="consultation-details-card">
+                <div class="details-section">
                     <h4><span class="material-symbols-rounded">record_voice_over</span> Transcription Originale</h4>
                     <div class="transcription-box">
                         <p>${consultation.rawData || 'Aucune transcription disponible'}</p>
@@ -766,6 +779,7 @@ function editConsultation(consultationId) {
     document.getElementById('diagnosis').value = consultation.diagnosis || '';
     document.getElementById('medications').value = consultation.medications || '';
     document.getElementById('tests').value = consultation.tests || '';
+    document.getElementById('additional-info').value = consultation.additionalInfo || '';
     
     // Set current consultation ID
     currentConsultationId = consultationId;
@@ -810,11 +824,11 @@ function showPatientSection() {
 
 // Settings Modal Functions
 function showSettingsModal() {
-    document.getElementById('settings-modal').classList.remove('hidden');
+    document.getElementById('settings-modal').classList.add('show');
 }
 
 function hideSettingsModal() {
-    document.getElementById('settings-modal').classList.add('hidden');
+    document.getElementById('settings-modal').classList.remove('show');
 }
 
 function saveSettingsForm(event) {
@@ -831,6 +845,94 @@ function saveSettingsForm(event) {
     
     // Show confirmation
     showModal('Succès', 'Paramètres enregistrés avec succès.');
+}
+
+function exportData() {
+    try {
+        // Get all data from localStorage
+        const patients = getPatients();
+        const settings = {
+            geminiApiKey: geminiApiKey
+        };
+        
+        // Create a data object with all the data
+        const data = {
+            patients: patients,
+            settings: settings,
+            version: '1.0'
+        };
+        
+        // Convert to JSON
+        const jsonData = JSON.stringify(data, null, 2);
+        
+        // Create a blob and download link
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        // Create a temporary link and click it
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `patient-data-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+        
+        showNotification('Succès', 'Données exportées avec succès!', 'success');
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        showNotification('Erreur', 'Échec de l\'exportation des données.', 'error');
+    }
+}
+
+function importData() {
+    // Trigger the file input
+    document.getElementById('import-file-input').click();
+}
+
+function handleFileImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // Validate the data structure
+            if (!data.patients || !Array.isArray(data.patients)) {
+                throw new Error('Format de données invalide');
+            }
+            
+            // Import the data
+            localStorage.setItem('patients', JSON.stringify(data.patients));
+            
+            // Import settings if available
+            if (data.settings && data.settings.geminiApiKey) {
+                geminiApiKey = data.settings.geminiApiKey;
+                saveSettings();
+            }
+            
+            // Reload the page to reflect the changes
+            showNotification('Succès', 'Données importées avec succès! La page va se recharger.', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } catch (error) {
+            console.error('Error importing data:', error);
+            showNotification('Erreur', 'Échec de l\'importation des données. Format invalide.', 'error');
+        }
+    };
+    
+    reader.readAsText(file);
+    
+    // Reset the file input
+    event.target.value = '';
 }
 
 // Voice Recording Functions
@@ -1046,6 +1148,9 @@ function fillFormFromGemini() {
             
             testsField.value = 'Aucun test requis pour le moment\nConsultation de suivi dans une semaine si les symptômes persistent';
             highlightField(testsField);
+            
+            document.getElementById('additional-info').value = 'Patient mentionne un stress important au travail récemment. Recommandation de techniques de relaxation et de gestion du stress.';
+            highlightField(document.getElementById('additional-info'));
             
             // Show success notification
             showNotification('Succès', 'Formulaire rempli avec succès!', 'success');
