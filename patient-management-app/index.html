@@ -6,37 +6,55 @@
     <title>Gestion des Patients</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+    
     <div class="container">
         <header>
             <h1>Gestion des Patients et Consultations</h1>
-            <button id="settings-btn" class="btn secondary settings-btn">⚙️ Paramètres</button>
+            <button id="settings-btn" class="btn secondary settings-btn" aria-label="Paramètres">
+                <span class="material-symbols-rounded">settings</span>
+            </button>
         </header>
         
         <main>
             <div class="app-container">
-                <!-- Patient List Section -->
+                <!-- Patient Dashboard Section -->
                 <section id="patient-section" class="section">
-                    <h2>Liste des Patients</h2>
-                    <button id="add-patient-btn" class="btn primary">Ajouter un Patient</button>
+                    <div class="section-header">
+                        <h2>Tableau de Bord des Patients</h2>
+                        <button id="add-patient-btn" class="btn primary">
+                            <span class="material-symbols-rounded">person_add</span>
+                            Ajouter un Patient
+                        </button>
+                    </div>
                     
                     <div id="patients-list" class="list-container">
-                        <!-- Patient list will be populated here -->
+                        <!-- Patient cards will be populated here -->
                     </div>
                 </section>
 
                 <!-- Patient Form Section -->
                 <section id="patient-form-section" class="section hidden">
-                    <h2 id="patient-form-title">Ajouter un Patient</h2>
+                    <div class="section-header">
+                        <h2 id="patient-form-title">Ajouter un Patient</h2>
+                        <button type="button" id="cancel-patient-btn" class="btn secondary">
+                            <span class="material-symbols-rounded">arrow_back</span>
+                            Retour
+                        </button>
+                    </div>
+                    
                     <form id="patient-form">
                         <div class="form-group">
                             <label for="patient-name">Nom Complet</label>
-                            <input type="text" id="patient-name" required>
+                            <input type="text" id="patient-name" required placeholder="Entrez le nom complet">
                         </div>
                         <div class="form-group">
                             <label for="patient-age">Âge</label>
-                            <input type="number" id="patient-age" required min="0" max="120">
+                            <input type="number" id="patient-age" required min="0" max="120" placeholder="Âge">
                         </div>
                         <div class="form-group">
                             <label>Genre</label>
@@ -54,88 +72,184 @@
                         </div>
                         <div class="form-group">
                             <label for="patient-phone">Numéro de Téléphone</label>
-                            <input type="tel" id="patient-phone" required>
+                            <input type="tel" id="patient-phone" required placeholder="Numéro de téléphone">
                         </div>
                         <div class="form-group">
                             <label for="patient-history">Antécédents Médicaux</label>
-                            <textarea id="patient-history" rows="4"></textarea>
+                            <textarea id="patient-history" rows="4" placeholder="Décrivez les antécédents médicaux du patient"></textarea>
                         </div>
                         <div class="form-actions">
-                            <button type="button" id="cancel-patient-btn" class="btn secondary">Annuler</button>
-                            <button type="submit" class="btn primary">Enregistrer</button>
+                            <button type="submit" class="btn primary">
+                                <span class="material-symbols-rounded">save</span>
+                                Enregistrer
+                            </button>
                         </div>
                     </form>
                 </section>
 
-                <!-- Consultation Section -->
+                <!-- Patient Dossier Section -->
                 <section id="consultation-section" class="section hidden">
                     <div class="section-header">
-                        <h2>Consultations: <span id="selected-patient-name"></span></h2>
-                        <button id="add-consultation-btn" class="btn primary">Ajouter une Consultation</button>
-                        <button id="back-to-patients-btn" class="btn secondary">Retour aux Patients</button>
+                        <h2>Dossier Patient: <span id="selected-patient-name"></span></h2>
+                        <div class="section-actions">
+                            <button id="add-consultation-btn" class="btn primary">
+                                <span class="material-symbols-rounded">add</span>
+                                Nouvelle Consultation
+                            </button>
+                            <button id="back-to-patients-btn" class="btn secondary">
+                                <span class="material-symbols-rounded">arrow_back</span>
+                                Retour
+                            </button>
+                        </div>
                     </div>
                     
+                    <!-- Patient Summary Card -->
+                    <div class="patient-summary-card">
+                        <div id="patient-summary" class="patient-info-grid">
+                            <!-- Patient summary will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <h3 class="subsection-title">Historique des Consultations</h3>
                     <div id="consultations-list" class="list-container">
-                        <!-- Consultation list will be populated here -->
+                        <!-- Consultation cards will be populated here -->
                     </div>
                 </section>
 
-                <!-- Consultation Form Section -->
+                <!-- Consultation Wizard Section -->
                 <section id="consultation-form-section" class="section hidden">
-                    <h2>Nouvelle Consultation</h2>
-                    <form id="consultation-form">
-                        <div class="form-group">
-                            <label for="consultation-date">Date</label>
-                            <input type="date" id="consultation-date" required>
+                    <div class="section-header">
+                        <h2>Nouvelle Consultation</h2>
+                        <button type="button" id="cancel-consultation-btn" class="btn secondary">
+                            <span class="material-symbols-rounded">arrow_back</span>
+                            Retour
+                        </button>
+                    </div>
+                    
+                    <!-- Wizard Steps -->
+                    <div class="wizard-container">
+                        <div class="wizard-steps">
+                            <div class="wizard-step active" data-step="1">
+                                <div class="wizard-step-number">1</div>
+                                <div class="wizard-step-label">Enregistrer la voix</div>
+                            </div>
+                            <div class="wizard-step" data-step="2">
+                                <div class="wizard-step-number">2</div>
+                                <div class="wizard-step-label">Transcription</div>
+                            </div>
+                            <div class="wizard-step" data-step="3">
+                                <div class="wizard-step-number">3</div>
+                                <div class="wizard-step-label">Analyse et Validation</div>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="raw-data">Données Brutes (Enregistrement Vocal)</label>
-                            <div class="voice-input-container">
-                                <textarea id="raw-data" rows="4"></textarea>
-                                <div class="voice-controls">
-                                    <button type="button" id="start-recording-btn" class="btn icon">🎤 Commencer</button>
-                                    <button type="button" id="stop-recording-btn" class="btn icon" disabled>⏹️ Arrêter</button>
+                        <form id="consultation-form">
+                            <!-- Step 1: Voice Recording -->
+                            <div class="wizard-content" id="wizard-step-1">
+                                <div class="form-group">
+                                    <label for="consultation-date">Date de la Consultation</label>
+                                    <input type="date" id="consultation-date" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="raw-data">Enregistrement Vocal</label>
+                                    <div class="voice-input-container">
+                                        <textarea id="raw-data" rows="4" placeholder="La transcription apparaîtra ici après l'enregistrement..."></textarea>
+                                        <div class="voice-controls">
+                                            <button type="button" id="start-recording-btn" class="btn primary">
+                                                <span class="material-symbols-rounded">mic</span>
+                                                Commencer l'Enregistrement
+                                            </button>
+                                            <button type="button" id="stop-recording-btn" class="btn danger" disabled>
+                                                <span class="material-symbols-rounded">stop</span>
+                                                Arrêter l'Enregistrement
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" id="next-to-step-2" class="btn secondary">
+                                        <span class="material-symbols-rounded">arrow_forward</span>
+                                        Suivant
+                                    </button>
+                                    <button type="button" id="send-to-gemini-btn" class="btn primary">
+                                        <span class="material-symbols-rounded">send</span>
+                                        Envoyer à Gemini pour Transcription
+                                    </button>
                                 </div>
                             </div>
-                            <div class="api-buttons">
-                                <button type="button" id="send-to-gemini-btn" class="btn secondary">Envoyer à Gemini</button>
-                                <button type="button" id="fill-form-btn" class="btn secondary">Remplir le Formulaire</button>
+                            
+                            <!-- Step 2: Transcription Result -->
+                            <div class="wizard-content hidden" id="wizard-step-2">
+                                <div class="form-group">
+                                    <label for="transcription-result">Résultat de la Transcription</label>
+                                    <div class="transcription-container">
+                                        <div id="transcription-result" class="transcription-text"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" id="back-to-step-1" class="btn secondary">
+                                        <span class="material-symbols-rounded">arrow_back</span>
+                                        Retour
+                                    </button>
+                                    <button type="button" id="next-to-step-3" class="btn secondary">
+                                        <span class="material-symbols-rounded">arrow_forward</span>
+                                        Suivant
+                                    </button>
+                                    <button type="button" id="fill-form-btn" class="btn primary">
+                                        <span class="material-symbols-rounded">auto_fix</span>
+                                        Analyser et Remplir le Formulaire
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="symptoms">Symptômes</label>
-                            <textarea id="symptoms" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="diagnosis">Diagnostic</label>
-                            <textarea id="diagnosis" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="medications">Médicaments</label>
-                            <textarea id="medications" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="tests">Tests Recommandés</label>
-                            <textarea id="tests" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="button" id="cancel-consultation-btn" class="btn secondary">Annuler</button>
-                            <button type="submit" class="btn primary">Enregistrer</button>
-                        </div>
-                    </form>
+                            
+                            <!-- Step 3: Form Filling and Validation -->
+                            <div class="wizard-content hidden" id="wizard-step-3">
+                                <div class="form-group">
+                                    <label for="symptoms">Symptômes</label>
+                                    <textarea id="symptoms" rows="3" placeholder="Symptômes du patient"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="diagnosis">Diagnostic</label>
+                                    <textarea id="diagnosis" rows="3" placeholder="Diagnostic proposé"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="medications">Médicaments</label>
+                                    <textarea id="medications" rows="3" placeholder="Médicaments prescrits"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="tests">Tests Recommandés</label>
+                                    <textarea id="tests" rows="3" placeholder="Tests médicaux recommandés"></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" id="back-to-step-2" class="btn secondary">
+                                        <span class="material-symbols-rounded">arrow_back</span>
+                                        Retour
+                                    </button>
+                                    <button type="submit" class="btn primary">
+                                        <span class="material-symbols-rounded">save</span>
+                                        Enregistrer la Consultation
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </section>
 
                 <!-- Consultation Details Section -->
                 <section id="consultation-details-section" class="section hidden">
                     <div class="section-header">
                         <h2>Détails de la Consultation</h2>
-                        <button id="back-to-consultations-btn" class="btn secondary">Retour aux Consultations</button>
+                        <button id="back-to-consultations-btn" class="btn secondary">
+                            <span class="material-symbols-rounded">arrow_back</span>
+                            Retour aux Consultations
+                        </button>
                     </div>
                     <div id="consultation-details-content">
                         <!-- Consultation details will be populated here -->
@@ -145,11 +259,14 @@
         </main>
     </div>
 
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
     <!-- Modal for alerts and confirmations -->
-    <div id="modal" class="modal hidden">
+    <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h3 id="modal-title">Message</h3>
+            <h3 id="modal-title" class="modal-title">Message</h3>
             <p id="modal-message"></p>
             <div class="modal-actions">
                 <button id="modal-cancel" class="btn secondary">Annuler</button>
@@ -159,10 +276,10 @@
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="modal hidden">
+    <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close-settings-modal">&times;</span>
-            <h3>Paramètres</h3>
+            <h3 class="modal-title">Paramètres</h3>
             <form id="settings-form">
                 <div class="form-group">
                     <label for="gemini-api-key">Clé API Gemini</label>
@@ -171,7 +288,10 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" id="cancel-settings-btn" class="btn secondary">Annuler</button>
-                    <button type="submit" class="btn primary">Enregistrer</button>
+                    <button type="submit" class="btn primary">
+                        <span class="material-symbols-rounded">save</span>
+                        Enregistrer
+                    </button>
                 </div>
             </form>
         </div>
