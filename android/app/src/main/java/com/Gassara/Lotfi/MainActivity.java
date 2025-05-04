@@ -1,0 +1,5 @@
+package com.Gassara.Lotfi;
+
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {}

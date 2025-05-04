@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dr.Lotfi</string>
+    <string name="title_activity_main">Dr.Lotfi</string>
+    <string name="package_name">com.Gassara.Lotfi</string>
+    <string name="custom_url_scheme">com.Gassara.Lotfi</string>
+</resources>
