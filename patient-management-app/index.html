@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Patients</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestion des Patients et Consultations</h1>
+            <button id="settings-btn" class="btn secondary settings-btn">⚙️ Paramètres</button>
+        </header>
+        
+        <main>
+            <div class="app-container">
+                <!-- Patient List Section -->
+                <section id="patient-section" class="section">
+                    <h2>Liste des Patients</h2>
+                    <button id="add-patient-btn" class="btn primary">Ajouter un Patient</button>
+                    
+                    <div id="patients-list" class="list-container">
+                        <!-- Patient list will be populated here -->
+                    </div>
+                </section>
+
+                <!-- Patient Form Section -->
+                <section id="patient-form-section" class="section hidden">
+                    <h2 id="patient-form-title">Ajouter un Patient</h2>
+                    <form id="patient-form">
+                        <div class="form-group">
+                            <label for="patient-name">Nom Complet</label>
+                            <input type="text" id="patient-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-age">Âge</label>
+                            <input type="number" id="patient-age" required min="0" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label>Genre</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="gender" value="Masculin" checked> Masculin
+                                </label>
+                                <label>
+                                    <input type="radio" name="gender" value="Féminin"> Féminin
+                                </label>
+                                <label>
+                                    <input type="radio" name="gender" value="Autre"> Autre
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-phone">Numéro de Téléphone</label>
+                            <input type="tel" id="patient-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-history">Antécédents Médicaux</label>
+                            <textarea id="patient-history" rows="4"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="cancel-patient-btn" class="btn secondary">Annuler</button>
+                            <button type="submit" class="btn primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Consultation Section -->
+                <section id="consultation-section" class="section hidden">
+                    <div class="section-header">
+                        <h2>Consultations: <span id="selected-patient-name"></span></h2>
+                        <button id="add-consultation-btn" class="btn primary">Ajouter une Consultation</button>
+                        <button id="back-to-patients-btn" class="btn secondary">Retour aux Patients</button>
+                    </div>
+                    
+                    <div id="consultations-list" class="list-container">
+                        <!-- Consultation list will be populated here -->
+                    </div>
+                </section>
+
+                <!-- Consultation Form Section -->
+                <section id="consultation-form-section" class="section hidden">
+                    <h2>Nouvelle Consultation</h2>
+                    <form id="consultation-form">
+                        <div class="form-group">
+                            <label for="consultation-date">Date</label>
+                            <input type="date" id="consultation-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="raw-data">Données Brutes (Enregistrement Vocal)</label>
+                            <div class="voice-input-container">
+                                <textarea id="raw-data" rows="4"></textarea>
+                                <div class="voice-controls">
+                                    <button type="button" id="start-recording-btn" class="btn icon">🎤 Commencer</button>
+                                    <button type="button" id="stop-recording-btn" class="btn icon" disabled>⏹️ Arrêter</button>
+                                </div>
+                            </div>
+                            <div class="api-buttons">
+                                <button type="button" id="send-to-gemini-btn" class="btn secondary">Envoyer à Gemini</button>
+                                <button type="button" id="fill-form-btn" class="btn secondary">Remplir le Formulaire</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="symptoms">Symptômes</label>
+                            <textarea id="symptoms" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="diagnosis">Diagnostic</label>
+                            <textarea id="diagnosis" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="medications">Médicaments</label>
+                            <textarea id="medications" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tests">Tests Recommandés</label>
+                            <textarea id="tests" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="cancel-consultation-btn" class="btn secondary">Annuler</button>
+                            <button type="submit" class="btn primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Consultation Details Section -->
+                <section id="consultation-details-section" class="section hidden">
+                    <div class="section-header">
+                        <h2>Détails de la Consultation</h2>
+                        <button id="back-to-consultations-btn" class="btn secondary">Retour aux Consultations</button>
+                    </div>
+                    <div id="consultation-details-content">
+                        <!-- Consultation details will be populated here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for alerts and confirmations -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="modal-title">Message</h3>
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn secondary">Annuler</button>
+                <button id="modal-confirm" class="btn primary">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-settings-modal">&times;</span>
+            <h3>Paramètres</h3>
+            <form id="settings-form">
+                <div class="form-group">
+                    <label for="gemini-api-key">Clé API Gemini</label>
+                    <input type="password" id="gemini-api-key" placeholder="Entrez votre clé API Gemini">
+                    <small>Nécessaire pour la transcription audio et l'analyse des consultations</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancel-settings-btn" class="btn secondary">Annuler</button>
+                    <button type="submit" class="btn primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
