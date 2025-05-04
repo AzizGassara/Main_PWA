@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Patients</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-mobile-first.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
@@ -91,7 +91,7 @@
                 <section id="consultation-section" class="section hidden">
                     <div class="section-header">
                         <h2>Dossier Patient: <span id="selected-patient-name"></span></h2>
-                        <div class="section-actions">
+                        <div class="button-group">
                             <button id="add-consultation-btn" class="btn primary">
                                 <span class="material-symbols-rounded">add</span>
                                 Nouvelle Consultation
@@ -104,15 +104,15 @@
                     </div>
                     
                     <!-- Patient Summary Card -->
-                    <div class="patient-summary-card">
-                        <div id="patient-summary" class="patient-info-grid">
-                            <!-- Patient summary will be populated here -->
-                        </div>
+                    <div id="patient-summary">
+                        <!-- Patient summary will be populated here -->
                     </div>
                     
                     <h3 class="subsection-title">Historique des Consultations</h3>
-                    <div id="consultations-list" class="list-container">
-                        <!-- Consultation cards will be populated here -->
+                    <div class="consultation-timeline">
+                        <div id="consultations-list">
+                            <!-- Consultation cards will be populated here -->
+                        </div>
                     </div>
                 </section>
 
@@ -155,7 +155,11 @@
                                     <label for="raw-data">Enregistrement Vocal</label>
                                     <div class="voice-input-container">
                                         <textarea id="raw-data" rows="4" placeholder="La transcription apparaîtra ici après l'enregistrement..."></textarea>
-                                        <div class="voice-controls">
+                                        <div class="recording-status">
+                                            <div class="recording-indicator" id="recording-indicator"></div>
+                                            <span id="recording-status-text">Prêt à enregistrer</span>
+                                        </div>
+                                        <div class="recording-controls">
                                             <button type="button" id="start-recording-btn" class="btn primary">
                                                 <span class="material-symbols-rounded">mic</span>
                                                 Commencer l'Enregistrement

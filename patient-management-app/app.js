@@ -163,47 +163,50 @@ function createPatientCard(patient) {
     }
     
     const card = document.createElement('div');
-    card.className = 'list-item patient-card';
+    card.className = 'patient-card';
     card.innerHTML = `
-        <div class="list-item-header">
+        <div class="patient-card-header">
             <h3 class="patient-name">${patient.name}</h3>
-            <div class="list-item-actions">
-                <button class="btn primary edit-patient" data-id="${patient.id}" aria-label="Modifier">
-                    <span class="material-symbols-rounded">edit</span>
-                </button>
-                <button class="btn danger delete-patient" data-id="${patient.id}" aria-label="Supprimer">
-                    <span class="material-symbols-rounded">delete</span>
-                </button>
-                <button class="btn secondary view-consultations" data-id="${patient.id}">
-                    <span class="material-symbols-rounded">folder_open</span>
-                    Dossier
-                </button>
+        </div>
+        
+        <div class="patient-info">
+            <div class="patient-info-item">
+                <span class="patient-info-label">Âge</span>
+                <span class="patient-info-value">${patient.age} ans</span>
+            </div>
+            <div class="patient-info-item">
+                <span class="patient-info-label">Genre</span>
+                <span class="patient-info-value">${patient.gender}</span>
+            </div>
+            <div class="patient-info-item">
+                <span class="patient-info-label">Téléphone</span>
+                <span class="patient-info-value">${patient.phone}</span>
+            </div>
+            <div class="patient-info-item">
+                <span class="patient-info-label">Antécédents</span>
+                <span class="patient-info-value">${patient.history || 'Aucun'}</span>
             </div>
         </div>
-        <div class="list-item-content">
-            <div class="patient-info">
-                <div class="patient-detail">
-                    <span class="patient-detail-label">Âge</span>
-                    <span class="patient-detail-value">${patient.age} ans</span>
-                </div>
-                <div class="patient-detail">
-                    <span class="patient-detail-label">Genre</span>
-                    <span class="badge badge-primary">${patient.gender}</span>
-                </div>
-                <div class="patient-detail">
-                    <span class="patient-detail-label">Téléphone</span>
-                    <span class="patient-detail-value">${patient.phone}</span>
-                </div>
-                <div class="patient-detail">
-                    <span class="patient-detail-label">Antécédents</span>
-                    <span class="patient-detail-value">${patient.history || 'Aucun'}</span>
-                </div>
-            </div>
-            <div class="last-consultation">
-                <span class="patient-detail-label">Dernière consultation</span>
-                <div class="last-consultation-date">${lastConsultationDate}</div>
-                ${lastConsultationDiagnosis ? `<div class="last-consultation-diagnosis">${lastConsultationDiagnosis}</div>` : ''}
-            </div>
+        
+        <div class="patient-info-item mt-sm">
+            <span class="patient-info-label">Dernière consultation</span>
+            <span class="patient-info-value">${lastConsultationDate}</span>
+            ${lastConsultationDiagnosis ? `<span class="patient-info-value text-info">${lastConsultationDiagnosis}</span>` : ''}
+        </div>
+        
+        <div class="patient-card-actions">
+            <button class="btn primary edit-patient" data-id="${patient.id}" aria-label="Modifier">
+                <span class="material-symbols-rounded">edit</span>
+                Modifier
+            </button>
+            <button class="btn secondary view-consultations" data-id="${patient.id}">
+                <span class="material-symbols-rounded">folder_open</span>
+                Dossier
+            </button>
+            <button class="btn danger delete-patient" data-id="${patient.id}" aria-label="Supprimer">
+                <span class="material-symbols-rounded">delete</span>
+                Supprimer
+            </button>
         </div>
     `;
     
@@ -359,22 +362,29 @@ function createPatientSummary(patient) {
     const patientSummary = document.getElementById('patient-summary');
     
     patientSummary.innerHTML = `
-        <div class="patient-summary-header">
-            <div class="patient-summary-name">${patient.name}</div>
-            <div class="patient-summary-badge badge badge-primary">${patient.gender}</div>
-        </div>
-        <div class="patient-summary-details">
-            <div class="patient-summary-item">
-                <div class="patient-summary-label">Âge</div>
-                <div class="patient-summary-value">${patient.age} ans</div>
+        <div class="patient-card">
+            <div class="patient-card-header">
+                <h3 class="patient-name">${patient.name}</h3>
             </div>
-            <div class="patient-summary-item">
-                <div class="patient-summary-label">Téléphone</div>
-                <div class="patient-summary-value">${patient.phone}</div>
+            
+            <div class="patient-info">
+                <div class="patient-info-item">
+                    <span class="patient-info-label">Âge</span>
+                    <span class="patient-info-value">${patient.age} ans</span>
+                </div>
+                <div class="patient-info-item">
+                    <span class="patient-info-label">Genre</span>
+                    <span class="patient-info-value">${patient.gender}</span>
+                </div>
+                <div class="patient-info-item">
+                    <span class="patient-info-label">Téléphone</span>
+                    <span class="patient-info-value">${patient.phone}</span>
+                </div>
             </div>
-            <div class="patient-summary-item patient-summary-history">
-                <div class="patient-summary-label">Antécédents Médicaux</div>
-                <div class="patient-summary-value">${patient.history || 'Aucun antécédent médical enregistré'}</div>
+            
+            <div class="patient-info-item mt-sm">
+                <span class="patient-info-label">Antécédents Médicaux</span>
+                <span class="patient-info-value">${patient.history || 'Aucun antécédent médical enregistré'}</span>
             </div>
         </div>
     `;
@@ -402,7 +412,7 @@ function loadConsultations(patient) {
 
 function createConsultationCard(consultation) {
     const card = document.createElement('div');
-    card.className = 'list-item consultation-card clickable';
+    card.className = 'timeline-item consultation-card clickable';
     card.dataset.id = consultation.id;
     
     const date = new Date(consultation.date);
@@ -424,20 +434,16 @@ function createConsultationCard(consultation) {
     }
     
     card.innerHTML = `
-        <div class="list-item-header">
-            <div>
-                <div class="consultation-date">${formattedDate}</div>
-                <h3 class="consultation-diagnosis">${consultation.diagnosis || 'Diagnostic non spécifié'}</h3>
-            </div>
-            <div class="list-item-actions">
-                <button class="btn danger delete-consultation" data-id="${consultation.id}" aria-label="Supprimer">
+        <div class="timeline-date">${formattedDate}</div>
+        <div class="timeline-content">
+            <div class="timeline-title">${consultation.diagnosis || 'Diagnostic non spécifié'}</div>
+            <div class="consultation-symptoms">${consultation.symptoms || 'Aucun symptôme enregistré'}</div>
+            ${medicationTags ? `<div class="consultation-medications mt-sm">${medicationTags}</div>` : ''}
+            <div class="timeline-actions">
+                <button class="btn danger btn-icon delete-consultation" data-id="${consultation.id}" aria-label="Supprimer">
                     <span class="material-symbols-rounded">delete</span>
                 </button>
             </div>
-        </div>
-        <div class="list-item-content">
-            <div class="consultation-symptoms">${consultation.symptoms || 'Aucun symptôme enregistré'}</div>
-            ${medicationTags ? `<div class="consultation-medications">${medicationTags}</div>` : ''}
         </div>
     `;
     
@@ -692,54 +698,72 @@ function viewConsultationDetails(consultationId) {
     const detailsContent = document.getElementById('consultation-details-content');
     detailsContent.innerHTML = `
         <div class="consultation-details">
-            <div class="consultation-details-header">
-                <div class="consultation-details-date">
-                    <span class="material-symbols-rounded">event</span>
-                    ${formattedDate}
+            <div class="timeline-date">
+                <span class="material-symbols-rounded">event</span>
+                ${formattedDate}
+            </div>
+            
+            <div class="consultation-details-section">
+                <div class="consultation-details-title">
+                    <span class="material-symbols-rounded">medical_information</span>
+                    Diagnostic
                 </div>
-                <div class="consultation-details-diagnosis">
-                    <h3>${consultation.diagnosis || 'Diagnostic non spécifié'}</h3>
+                <div class="consultation-details-content">
+                    ${consultation.diagnosis || 'Diagnostic non spécifié'}
                 </div>
             </div>
             
-            <div class="consultation-details-card">
-                <div class="details-section">
-                    <h4><span class="material-symbols-rounded">sick</span> Symptômes</h4>
-                    <p>${consultation.symptoms || 'Aucun symptôme enregistré'}</p>
+            <div class="consultation-details-section">
+                <div class="consultation-details-title">
+                    <span class="material-symbols-rounded">sick</span>
+                    Symptômes
                 </div>
-                
-                <div class="details-section">
-                    <h4><span class="material-symbols-rounded">medication</span> Médicaments</h4>
-                    <div class="tags-container">
-                        ${medicationTags || '<p>Aucun médicament prescrit</p>'}
-                    </div>
-                </div>
-                
-                <div class="details-section">
-                    <h4><span class="material-symbols-rounded">lab_panel</span> Tests Recommandés</h4>
-                    <div class="tags-container">
-                        ${testTags || '<p>Aucun test recommandé</p>'}
-                    </div>
+                <div class="consultation-details-content">
+                    ${consultation.symptoms || 'Aucun symptôme enregistré'}
                 </div>
             </div>
             
-            <div class="consultation-details-card">
-                <div class="details-section">
-                    <h4><span class="material-symbols-rounded">info</span> Informations Supplémentaires</h4>
-                    <p>${consultation.additionalInfo || 'Aucune information supplémentaire'}</p>
+            <div class="consultation-details-section">
+                <div class="consultation-details-title">
+                    <span class="material-symbols-rounded">medication</span>
+                    Médicaments
+                </div>
+                <div class="consultation-details-content">
+                    ${medicationTags || 'Aucun médicament prescrit'}
                 </div>
             </div>
             
-            <div class="consultation-details-card">
-                <div class="details-section">
-                    <h4><span class="material-symbols-rounded">record_voice_over</span> Transcription Originale</h4>
-                    <div class="transcription-box">
-                        <p>${consultation.rawData || 'Aucune transcription disponible'}</p>
-                    </div>
+            <div class="consultation-details-section">
+                <div class="consultation-details-title">
+                    <span class="material-symbols-rounded">lab_panel</span>
+                    Tests Recommandés
+                </div>
+                <div class="consultation-details-content">
+                    ${testTags || 'Aucun test recommandé'}
                 </div>
             </div>
             
-            <div class="details-actions">
+            <div class="consultation-details-section">
+                <div class="consultation-details-title">
+                    <span class="material-symbols-rounded">info</span>
+                    Informations Supplémentaires
+                </div>
+                <div class="consultation-details-content">
+                    ${consultation.additionalInfo || 'Aucune information supplémentaire'}
+                </div>
+            </div>
+            
+            <div class="consultation-details-section">
+                <div class="consultation-details-title">
+                    <span class="material-symbols-rounded">record_voice_over</span>
+                    Transcription Originale
+                </div>
+                <div class="consultation-details-content transcription-box">
+                    ${consultation.rawData || 'Aucune transcription disponible'}
+                </div>
+            </div>
+            
+            <div class="button-group mt-lg">
                 <button id="edit-consultation-btn" class="btn primary">
                     <span class="material-symbols-rounded">edit</span>
                     Modifier
@@ -936,15 +960,48 @@ function handleFileImport(event) {
 }
 
 // Voice Recording Functions
+// Function to simulate recording for environments without microphone access
+function simulateRecording() {
+    isRecording = true;
+    
+    // Update UI to show recording simulation
+    document.getElementById('start-recording-btn').disabled = true;
+    document.getElementById('stop-recording-btn').disabled = false;
+    document.getElementById('recording-indicator').classList.add('active');
+    document.getElementById('recording-status-text').textContent = 'Simulation d\'enregistrement...';
+    
+    // Simulate recording for 3 seconds
+    setTimeout(() => {
+        isRecording = false;
+        
+        // Update UI
+        document.getElementById('start-recording-btn').disabled = false;
+        document.getElementById('stop-recording-btn').disabled = true;
+        document.getElementById('recording-indicator').classList.remove('active');
+        document.getElementById('recording-status-text').textContent = 'Simulation terminée';
+        
+        // Set example transcription text
+        const exampleText = "Le patient présente une fièvre de 39°C depuis trois jours, accompagnée de maux de tête et de courbatures. Il signale également une toux sèche et des difficultés respiratoires légères. Pas d'antécédents médicaux significatifs. Prescription d'antipyrétiques et recommandation de repos. Test COVID à envisager si les symptômes persistent.";
+        document.getElementById('raw-data').value = exampleText;
+        
+        showNotification('Simulation terminée', 'Un exemple de transcription a été généré pour la démonstration.', 'info');
+    }, 3000);
+}
+
 function startRecording() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showModal('Non supporté', 'L\'enregistrement audio n\'est pas supporté par votre navigateur.');
-        return;
-    }
+    if (isRecording) return;
     
     // Check if Gemini API key is set
     if (!geminiApiKey) {
         showModal('Clé API manquante', 'Veuillez configurer votre clé API Gemini dans les paramètres avant d\'utiliser cette fonctionnalité.');
+        return;
+    }
+    
+    // Check if MediaDevices API is available
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.warn('MediaDevices API not supported in this environment');
+        showNotification('Mode simulation', 'L\'API MediaDevices n\'est pas supportée. Utilisation du mode simulation.', 'info');
+        simulateRecording();
         return;
     }
     
@@ -986,26 +1043,44 @@ function startRecording() {
             // Update UI
             document.getElementById('start-recording-btn').disabled = true;
             document.getElementById('stop-recording-btn').disabled = false;
+            document.getElementById('recording-indicator').classList.add('active');
+            document.getElementById('recording-status-text').textContent = 'Enregistrement en cours...';
         })
         .catch(error => {
             console.error('Error accessing microphone:', error);
-            showModal('Erreur', `Erreur lors de l'accès au microphone: ${error.message}`);
+            showNotification('Microphone non disponible', 'Utilisation du mode simulation pour la démonstration.', 'info');
+            simulateRecording();
         });
 }
 
 function stopRecording() {
-    if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
-    
-    try {
-        mediaRecorder.stop();
+    // If we're not recording or there's no mediaRecorder, just update the UI
+    if (isRecording && (!mediaRecorder || mediaRecorder.state === 'inactive')) {
         isRecording = false;
         
         // Update UI
         document.getElementById('start-recording-btn').disabled = false;
         document.getElementById('stop-recording-btn').disabled = true;
-    } catch (error) {
-        console.error('Error stopping recording:', error);
-        showModal('Erreur', `Erreur lors de l'arrêt de l'enregistrement: ${error.message}`);
+        document.getElementById('recording-indicator').classList.remove('active');
+        document.getElementById('recording-status-text').textContent = 'Enregistrement terminé';
+        return;
+    }
+    
+    // If we have an active mediaRecorder, stop it
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        try {
+            mediaRecorder.stop();
+            isRecording = false;
+            
+            // Update UI
+            document.getElementById('start-recording-btn').disabled = false;
+            document.getElementById('stop-recording-btn').disabled = true;
+            document.getElementById('recording-indicator').classList.remove('active');
+            document.getElementById('recording-status-text').textContent = 'Enregistrement terminé';
+        } catch (error) {
+            console.error('Error stopping recording:', error);
+            showNotification('Erreur', `Erreur lors de l'arrêt de l'enregistrement: ${error.message}`, 'error');
+        }
     }
 }
 
@@ -1017,8 +1092,31 @@ function sendToGemini() {
         return;
     }
     
-    // Check if we have an audio recording
+    // Get the raw data field
     const rawDataField = document.getElementById('raw-data');
+    
+    // Check if we have text content from simulation
+    if (rawDataField.value && rawDataField.value.length > 20 && !rawDataField.value.startsWith('Enregistrement audio capturé')) {
+        // We have simulated text content, use it directly
+        const transcriptionResult = document.getElementById('transcription-result');
+        
+        // Show loading spinner
+        showLoading(transcriptionResult, 'Traitement de la transcription...');
+        
+        setTimeout(() => {
+            hideLoading(transcriptionResult);
+            transcriptionResult.innerHTML = `<div class="transcription-success">${rawDataField.value}</div>`;
+            
+            // Enable the next button
+            document.getElementById('next-to-step-3').disabled = false;
+            
+            // Go to step 2 automatically
+            goToWizardStep(2);
+        }, 1500);
+        return;
+    }
+    
+    // Check if we have an audio recording
     const audioUrl = rawDataField.dataset.audioUrl;
     
     if (!audioUrl) {
@@ -1129,27 +1227,51 @@ function fillFormFromGemini() {
     // Show notification
     const notification = showNotification('Analyse en cours', 'Analyse de la transcription par Gemini...', 'info');
     
-    // Check if this is a simulated transcription for testing
-    if (document.getElementById('raw-data').dataset.audioUrl === 'simulated-audio-url') {
-        console.log('Using simulated transcription data for testing');
+    // Check if this is a simulated transcription
+    const isSimulated = document.getElementById('raw-data').dataset.audioUrl === 'simulated-audio-url' || 
+                        rawData.includes('fièvre de 39°C') || 
+                        rawData.includes('maux de tête') || 
+                        rawData.includes('courbatures');
+                        
+    if (isSimulated) {
+        console.log('Using simulated transcription data');
         setTimeout(() => {
             // Hide loading spinner
             hideLoading(formContainer);
             
+            // Determine which simulated data to use based on the content
+            let symptoms, diagnosis, medications, tests, additionalInfo;
+            
+            if (rawData.includes('fièvre de 39°C')) {
+                // Flu-like symptoms
+                symptoms = 'Fièvre de 39°C depuis trois jours\nMaux de tête\nCourbatures\nToux sèche\nDifficultés respiratoires légères';
+                diagnosis = 'Syndrome grippal / Infection virale respiratoire';
+                medications = 'Antipyrétiques (Paracétamol 1000mg toutes les 6 heures)\nHydratation abondante\nRepos au lit';
+                tests = 'Test COVID à envisager si les symptômes persistent';
+                additionalInfo = 'Patient sans antécédents médicaux significatifs. Surveillance de l\'évolution des symptômes respiratoires.';
+            } else {
+                // Default to migraine symptoms
+                symptoms = 'Maux de tête depuis trois jours\nFièvre légère\nSensibilité à la lumière\nNausées occasionnelles';
+                diagnosis = 'Migraine probable liée au stress';
+                medications = 'Ibuprofène 400mg, 1 comprimé toutes les 6 heures\nParacétamol 1000mg en cas de fièvre';
+                tests = 'Aucun test requis pour le moment\nConsultation de suivi dans une semaine si les symptômes persistent';
+                additionalInfo = 'Patient mentionne un stress important au travail récemment. Recommandation de techniques de relaxation et de gestion du stress.';
+            }
+            
             // Fill the form fields with simulated data
-            symptomsField.value = 'Maux de tête depuis trois jours\nFièvre légère\nSensibilité à la lumière\nNausées occasionnelles';
+            symptomsField.value = symptoms;
             highlightField(symptomsField);
             
-            diagnosisField.value = 'Migraine probable liée au stress';
+            diagnosisField.value = diagnosis;
             highlightField(diagnosisField);
             
-            medicationsField.value = 'Ibuprofène 400mg, 1 comprimé toutes les 6 heures\nParacétamol 1000mg en cas de fièvre';
+            medicationsField.value = medications;
             highlightField(medicationsField);
             
-            testsField.value = 'Aucun test requis pour le moment\nConsultation de suivi dans une semaine si les symptômes persistent';
+            testsField.value = tests;
             highlightField(testsField);
             
-            document.getElementById('additional-info').value = 'Patient mentionne un stress important au travail récemment. Recommandation de techniques de relaxation et de gestion du stress.';
+            document.getElementById('additional-info').value = additionalInfo;
             highlightField(document.getElementById('additional-info'));
             
             // Show success notification
