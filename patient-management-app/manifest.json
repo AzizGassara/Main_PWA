@@ -2,7 +2,7 @@
   "name": "Gestion des Patients",
   "short_name": "PatientApp",
   "description": "Application de gestion des patients et consultations",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4285f4",

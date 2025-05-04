@@ -1,5 +1,6 @@
 const CACHE_NAME = 'patient-app-v1';
 const urlsToCache = [
+  './',
   '/',
   '/index.html',
   '/styles-mobile-first.css',
